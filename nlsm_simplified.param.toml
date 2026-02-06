@@ -1,0 +1,187 @@
+# ===========================================
+# ==== PARAMETER FILE FOR PROJECT: NLSM
+# ===========================================
+
+# -------------------------------------------
+# Derivative/operator selection (your “top-level” knobs)
+# -------------------------------------------
+SOLVER_DERIVTYPE_FIRST  = "C6_4"     # NLSM_DERIVTYPE_FIRST
+SOLVER_DERIVTYPE_SECOND = "2C6_1"     # NLSM_DERIVTYPE_SECOND
+SOLVER_DERIV_FIRST_COEFFS  = []    # NLSM_DERIV_FIRST_COEFFS
+SOLVER_DERIV_SECOND_COEFFS = []    # NLSM_DERIV_SECOND_COEFFS
+
+# Keep existing in-matrix filters (you did not supply NLSM_* replacements for these)
+SOLVER_INMATFILT_FIRST = "BYUT6"
+SOLVER_INMATFILT_SECOND = "none"
+SOLVER_INMATFILT_FIRST_COEFFS = [0.3]
+SOLVER_INMATFILT_SECOND_COEFFS = [0.5]
+
+# ========
+# === FILE SAVING AND BASIC INFORMATION PARAMETERS
+# ========
+
+# Prefixes (mapped from NLSM_*_FILE_PREFIX)
+"dsolve::SOLVER_VTU_FILE_PREFIX"     = "vtu/nlsm_gr"     # NLSM_VTU_FILE_PREFIX
+"dsolve::SOLVER_CHKPT_FILE_PREFIX"   = "cp/nlsm_cp"     # NLSM_CHKPT_FILE_PREFIX
+"dsolve::SOLVER_PROFILE_FILE_PREFIX" = "prof/nlsm_prof"   # NLSM_PROFILE_FILE_PREFIX
+
+# Output selection (2 evolution vars: chi, phi)
+"dsolve::SOLVER_NUM_EVOL_VARS_VTU_OUTPUT"  = 2                 # NLSM_NUM_EVOL_VARS_VTU_OUTPUT
+"dsolve::SOLVER_VTU_OUTPUT_EVOL_INDICES"   = [0, 1]            # NLSM_VTU_OUTPUT_EVOL_INDICES
+"dsolve::SOLVER_NUM_CONST_VARS_VTU_OUTPUT" = 0
+"dsolve::SOLVER_VTU_OUTPUT_CONST_INDICES"  = []
+
+# z-slice only
+"dsolve::SOLVER_VTU_Z_SLICE_ONLY" = true                       # NLSM_VTU_Z_SLICE_ONLY
+
+# IO frequencies / gaps
+"dsolve::SOLVER_IO_OUTPUT_FREQ" = 1                            # NLSM_IO_OUTPUT_FREQ
+"dsolve::SOLVER_IO_OUTPUT_GAP"  = 1                            # NLSM_IO_OUTPUT_GAP
+"dsolve::SOLVER_TIME_STEP_OUTPUT_FREQ" = 1                     # (left as-is; you did not provide NLSM_* for this)
+
+# Console output: only chi, phi; no constraints
+"dsolve::SOLVER_NUM_CONSOLE_OUTPUT_VARS" = 2
+"dsolve::SOLVER_CONSOLE_OUTPUT_VARS"     = [0, 1]
+"dsolve::SOLVER_NUM_CONSOLE_OUTPUT_CONSTRAINTS" = 0
+"dsolve::SOLVER_CONSOLE_OUTPUT_CONSTRAINTS"     = []
+
+# Checkpointing / restore
+"dsolve::SOLVER_CHECKPT_FREQ"   = 10000                        # NLSM_CHECKPT_FREQ
+"dsolve::SOLVER_RESTORE_SOLVER" = 0                            # NLSM_RESTORE_SOLVER
+
+# ========
+# === INITIAL DATA PARAMETERS
+# ========
+
+# (If your code uses SOLVER_ID_TYPE for anything legacy, keep it consistent with NLSM_ID_TYPE)
+"dsolve::SOLVER_ID_TYPE" = 0
+
+# NLSM initial data “recipe”
+"dsolve::NLSM_ID_TYPE" = 0                                    # NLSM_ID_TYPE
+
+# Primary amplitudes / shape params
+"dsolve::NLSM_ID_AMP1" = 1.3                                  # NLSM_ID_AMP1
+"dsolve::NLSM_ID_AMP2" = 0.0                                  # NLSM_ID_AMP2
+
+"dsolve::NLSM_ID_DELTA1"  = 2.5                               # NLSM_ID_DELTA1
+"dsolve::NLSM_ID_DELTA2"  = 3.0                               # NLSM_ID_DELTA2
+
+# (Your earlier file had LAMBDA1; your new list does NOT include it, so remove it unless your code requires it.)
+# "dsolve::NLSM_ID_LAMBDA1" = 0.5
+
+# Centers
+"dsolve::NLSM_ID_XC1" = 0.0
+"dsolve::NLSM_ID_YC1" = 0.0
+"dsolve::NLSM_ID_ZC1" = 0.0
+
+"dsolve::NLSM_ID_XC2" = 0.0
+"dsolve::NLSM_ID_YC2" = 0.0
+"dsolve::NLSM_ID_ZC2" = 0.0
+
+# Ellipticity / anisotropy
+"dsolve::NLSM_ID_EPSX1" = 1.0
+"dsolve::NLSM_ID_EPSY1" = 1.0
+"dsolve::NLSM_ID_EPSZ1" = 1.0
+
+"dsolve::NLSM_ID_EPSX2" = 1.0
+"dsolve::NLSM_ID_EPSY2" = 1.0
+"dsolve::NLSM_ID_EPSZ2" = 1.0
+
+# Size/scale parameters
+"dsolve::NLSM_ID_R1" = 3.0                                   # NLSM_ID_R1
+"dsolve::NLSM_ID_R2" = 0.0                                   # NLSM_ID_R2
+
+# Extra knobs
+"dsolve::NLSM_ID_NU1"   = 0.0                                 # NLSM_ID_NU1
+"dsolve::NLSM_ID_NU2"   = 0.0                                 # NLSM_ID_NU2
+"dsolve::NLSM_ID_OMEGA" = 0.4                                 # NLSM_ID_OMEGA
+
+# Wave speeds (these must exist in your parameters.h/parameters.cpp, otherwise delete them)
+"dsolve::NLSM_WAVE_SPEED_X" = 1.0
+"dsolve::NLSM_WAVE_SPEED_Y" = 1.0
+"dsolve::NLSM_WAVE_SPEED_Z" = 1.0
+
+# ========== SOLVER PARAMETERS ============
+
+"dsolve::SOLVER_DERIV_TYPE"      = -1
+"dsolve::SOLVER_2ND_DERIV_TYPE"  = -1
+"dsolve::SOLVER_FILTER_TYPE"     = 0
+
+"dsolve::SOLVER_KIM_FILTER_KC"  = 2.764601535159018
+"dsolve::SOLVER_KIM_FILTER_EPS" = 0.25
+"dsolve::SOLVER_FILTER_FREQ"    = 1
+
+"dsolve::SOLVER_DERIV_CLOSURE_TYPE" = 1
+
+# Time stepping
+# Time stepping
+"dsolve::SOLVER_CFL_FACTOR"     = 0.25
+"dsolve::SOLVER_RK_TIME_BEGIN"  = 0
+"dsolve::SOLVER_RK_TIME_END"    = 10.0
+"dsolve::SOLVER_RK_TYPE"        = 2
+"dsolve::SOLVER_RK45_TIME_STEP_SIZE" = 0.01
+"dsolve::SOLVER_RK45_DESIRED_TOL"    = 0.001
+
+
+# KO dissipation
+"dsolve::KO_DISS_SIGMA" = 0.4                                  # KO_DISS_SIGMA
+
+# ========
+# === DENDRO SETUP AND COMPUTATION-SPECIFIC PARAMETERS
+# ========
+
+"dsolve::SOLVER_ENABLE_BLOCK_ADAPTIVITY" = 1                   # NLSM_ENABLE_BLOCK_ADAPTIVITY
+
+"dsolve::SOLVER_MAXDEPTH" = 6                                 # NLSM_MAXDEPTH
+"dsolve::SOLVER_MINDEPTH" = 3                                 # (unchanged; you did not provide NLSM_MINDEPTH)
+
+"dsolve::SOLVER_REFINEMENT_MODE" = 0
+
+"dsolve::SOLVER_NUM_REFINE_VARS"         = 2                   # NLSM_NUM_REFINE_VARS
+"dsolve::SOLVER_REFINE_VARIABLE_INDICES" = [0, 1]              # NLSM_REFINE_VARIABLE_INDICES
+
+"dsolve::SOLVER_ELE_ORDER" = 6                                 # NLSM_ELE_ORDER
+
+# Block bounds (block adaptivity domain)
+"dsolve::SOLVER_BLK_MIN_X" = -19.9                              # NLSM_BLK_MIN_X
+"dsolve::SOLVER_BLK_MIN_Y" = -19.9                              # NLSM_BLK_MIN_Y
+"dsolve::SOLVER_BLK_MIN_Z" = -19.9                              # NLSM_BLK_MIN_Z
+"dsolve::SOLVER_BLK_MAX_X" =  19.9                              # NLSM_BLK_MAX_X
+"dsolve::SOLVER_BLK_MAX_Y" =  19.9                              # NLSM_BLK_MAX_Y
+"dsolve::SOLVER_BLK_MAX_Z" =  19.9                              # NLSM_BLK_MAX_Z
+
+# Remeshing frequency
+"dsolve::SOLVER_REMESH_TEST_FREQ" = 1                          # NLSM_REMESH_TEST_FREQ
+
+# Performance / comm knobs
+"dsolve::SOLVER_DENDRO_GRAIN_SZ"   = 100                       # NLSM_DENDRO_GRAIN_SZ
+"dsolve::SOLVER_ASYNC_COMM_K"      = 2                         # NLSM_ASYNC_COMM_K
+"dsolve::SOLVER_DENDRO_AMR_FAC"    = 0.1                       # NLSM_DENDRO_AMR_FAC
+"dsolve::SOLVER_LOAD_IMB_TOL"      = 0.1                       # NLSM_LOAD_IMB_TOL
+"dsolve::SOLVER_DIM"               = 3                         # NLSM_DIM
+
+# Wavelet tolerance
+"dsolve::SOLVER_WAVELET_TOL" = 0.0001                          # NLSM_WAVELET_TOL
+"dsolve::SOLVER_USE_WAVELET_TOL_FUNCTION" = 0
+"dsolve::SOLVER_WAVELET_TOL_MAX" = 0.001
+"dsolve::SOLVER_WAVELET_TOL_FUNCTION_R0" = 30.0
+"dsolve::SOLVER_WAVELET_TOL_FUNCTION_R1" = 220.0
+
+"dsolve::SOLVER_USE_FD_GRID_TRANSFER" = false
+
+# Full grid bounds (the “actual” computational domain)
+"dsolve::SOLVER_GRID_MIN_X" = -20.0                            # NLSM_GRID_MIN_X
+"dsolve::SOLVER_GRID_MAX_X" =  20.0                            # NLSM_GRID_MAX_X
+"dsolve::SOLVER_GRID_MIN_Y" = -20.0                            # NLSM_GRID_MIN_Y
+"dsolve::SOLVER_GRID_MAX_Y" =  20.0                            # NLSM_GRID_MAX_Y
+"dsolve::SOLVER_GRID_MIN_Z" = -20.0                            # NLSM_GRID_MIN_Z
+"dsolve::SOLVER_GRID_MAX_Z" =  20.0                            # NLSM_GRID_MAX_Z
+
+# (These are EMDA-ish eta damping knobs; harmless if unused, but keeping them consistent)
+"dsolve::SOLVER_ETA_CONST"        = 2.0
+"dsolve::SOLVER_ETA_DAMPING_EXP"  = 2.0
+"dsolve::SOLVER_ETA_R0"           = 30.0
+
+# ===========================================
+# END PARAMTER FILE
+# ===========================================
