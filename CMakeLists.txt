@@ -302,6 +302,10 @@ option(USE_FIRST_DERIV_TWICE "Use first derivative twice instead of second deriv
 if(USE_FIRST_DERIV_TWICE)
 add_definitions(-DUSE_FIRST_DERIV_TWICE=1)
 endif()
+option(USE_LINEAR_EQNS "Use linear RHS equations instead of nonlinear" OFF)
+if(USE_LINEAR_EQNS)
+  add_definitions(-DUSE_LINEAR_EQNS=1)
+endif()
 # === END REQUIRED CONFIGURATIONS FOR DENDRO ===
 
 include(FetchContent)

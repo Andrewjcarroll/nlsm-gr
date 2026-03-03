@@ -29,7 +29,7 @@ lap_chi = sum(d2(i, i, chi) for i in dendro.e_i)
 ###############################################################
 
 chi_rhs = phi
-phi_rhs = lap_chi - sin(2*chi) / r2_safe
+phi_rhs = lap_chi - sin(2*chi) / r2
 
 outs   = [chi_rhs, phi_rhs]
 vnames = ["chi_rhs", "phi_rhs"]

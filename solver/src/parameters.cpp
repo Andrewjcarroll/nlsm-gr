@@ -1175,7 +1175,7 @@ void dumpParamFile(std::ostream& sout, int root, MPI_Comm comm) {
              << std::endl;
         sout << "\tdsolve::KO_DISS_SIGMA: " << dsolve::KO_DISS_SIGMA
              << std::endl;
-        sout << "\tdsolve::SOLVER_ID_TYPE: " << dsolve::SOLVER_ID_TYPE
+        sout << "\tdsolve::NLSM_ID_TYPE: " << dsolve::NLSM_ID_TYPE
              << std::endl;
         sout << "\tdsolve::SOLVER_GRID_MIN_X: " << dsolve::SOLVER_GRID_MIN_X
              << std::endl;

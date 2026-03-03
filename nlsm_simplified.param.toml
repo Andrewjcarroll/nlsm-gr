@@ -19,7 +19,7 @@ SOLVER_INMATFILT_SECOND_COEFFS = [0.5]
 # ========
 # === FILE SAVING AND BASIC INFORMATION PARAMETERS
 # ========
-
+"dsolve::SOLVER_USE_LINEAR_EQNS = true
 # Prefixes (mapped from NLSM_*_FILE_PREFIX)
 "dsolve::SOLVER_VTU_FILE_PREFIX"     = "vtu/nlsm_gr"     # NLSM_VTU_FILE_PREFIX
 "dsolve::SOLVER_CHKPT_FILE_PREFIX"   = "cp/nlsm_cp"     # NLSM_CHKPT_FILE_PREFIX
@@ -166,7 +166,6 @@ SOLVER_INMATFILT_SECOND_COEFFS = [0.5]
 "dsolve::SOLVER_WAVELET_TOL_MAX" = 0.001
 "dsolve::SOLVER_WAVELET_TOL_FUNCTION_R0" = 30.0
 "dsolve::SOLVER_WAVELET_TOL_FUNCTION_R1" = 220.0
-
 "dsolve::SOLVER_USE_FD_GRID_TRANSFER" = false
 
 # Full grid bounds (the “actual” computational domain)

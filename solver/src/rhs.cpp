@@ -652,11 +652,11 @@ SOLVER_DERIVS->grad_z(grad_2_phi, phi_cpy, hz, sz, bflag);
                 double kappa_1 = 0.1 ; 
                 double kappa_2 = 0.1 ;   
 
-
-
-                // NOTE: (for now) we are not sending in the filtered E's and
-                // B's if they're used. (They're not! But it's good to note!)
+#ifdef USE_LINEAR_EQNS
+#include "../gencode/solver_rhs_linear_eqns.cpp.inc"
+#else
 #include "../gencode/solver_rhs_eqns.cpp.inc"
+#endif
             }
         }
     }
