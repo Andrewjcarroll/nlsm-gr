@@ -630,6 +630,13 @@ SOLVER_DERIVS->grad_z(grad_2_phi, phi_cpy, hz, sz, bflag);
 
 
     dsolve::timer::t_deriv.stop();
+  register double x;
+  register double y;
+  register double z;
+  register unsigned int pp;
+
+  double r;
+  double eta;
 
     // loop dep. removed allowing compiler to optmize for vectorization.
     dsolve::timer::t_rhs.start();
@@ -648,15 +655,22 @@ SOLVER_DERIVS->grad_z(grad_2_phi, phi_cpy, hz, sz, bflag);
 
                 const unsigned int pp = i + nx * (j + ny * k);
                 const double r_coord = sqrt(x * x + y * y + z * z);
-
+                 r= sqrt(x*x + y*y + z*z);
                 double kappa_1 = 0.1 ; 
                 double kappa_2 = 0.1 ;   
 
-#ifdef USE_LINEAR_EQNS
-#include "../gencode/solver_rhs_linear_eqns.cpp.inc"
-#else
-#include "../gencode/solver_rhs_eqns.cpp.inc"
-#endif
+        #ifdef NLSM_NONLINEAR
+          if (r > 1.0e-6) {
+            phi_rhs[pp] =  NLSM_WAVE_SPEED_X*grad2_0_0_chi[pp] + NLSM_WAVE_SPEED_Y*grad2_1_1_chi[pp] + NLSM_WAVE_SPEED_Z*grad2_2_2_chi[pp] - sin(2*chi[pp])/pow(r, 2);
+            chi_rhs[pp] = phi[pp];
+          } else {
+            chi_rhs[pp] = 0.0;
+            phi_rhs[pp] = 0.0;
+          }
+        #else
+          phi_rhs[pp] =  NLSM_WAVE_SPEED_X*grad2_0_0_chi[pp] + NLSM_WAVE_SPEED_Y*grad2_1_1_chi[pp] + NLSM_WAVE_SPEED_Z*grad2_2_2_chi[pp];
+          chi_rhs[pp] = phi[pp];
+        #endif
             }
         }
     }
