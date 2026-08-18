@@ -116,6 +116,8 @@ unsigned int SOLVER_VTU_OUTPUT_CONST_INDICES[2] = {0, 1};
 unsigned int SOLVER_IO_OUTPUT_GAP = 1;
 unsigned int SOLVER_DENDRO_GRAIN_SZ = 50;
 double SOLVER_DENDRO_AMR_FAC = 0.1;
+double SOLVER_DERIV_FIRST_WEIGHT = 0.0;
+double SOLVER_DERIV_SECOND_WEIGHT = 0.0;
 unsigned int SOLVER_INIT_GRID_ITER = 10;
 bool SOLVER_INIT_GRID_REINITIALIZE_EACH_TIME = true;
 unsigned int SOLVER_SPLIT_FIX = 2;
@@ -542,6 +544,30 @@ void readParamFile(const char* inFile, MPI_Comm comm) {
 
         dsolve::SOLVER_WAVELET_TOL_MAX =
             file["dsolve::SOLVER_WAVELET_TOL_MAX"].as_floating();
+    }
+
+    if (file.contains("dsolve::SOLVER_DERIV_FIRST_WEIGHT")) {
+        if (0.0 > file["dsolve::SOLVER_DERIV_FIRST_WEIGHT"].as_floating()) {
+            std::cerr
+                << R"(Invalid value for "dsolve::SOLVER_DERIV_FIRST_WEIGHT")"
+                << std::endl;
+            exit(-1);
+        }
+
+        dsolve::SOLVER_DERIV_FIRST_WEIGHT =
+            file["dsolve::SOLVER_DERIV_FIRST_WEIGHT"].as_floating();
+    }
+
+    if (file.contains("dsolve::SOLVER_DERIV_SECOND_WEIGHT")) {
+        if (0.0 > file["dsolve::SOLVER_DERIV_SECOND_WEIGHT"].as_floating()) {
+            std::cerr
+                << R"(Invalid value for "dsolve::SOLVER_DERIV_SECOND_WEIGHT")"
+                << std::endl;
+            exit(-1);
+        }
+
+        dsolve::SOLVER_DERIV_SECOND_WEIGHT =
+            file["dsolve::SOLVER_DERIV_SECOND_WEIGHT"].as_floating();
     }
 
     if (file.contains("dsolve::SOLVER_WAVELET_TOL_FUNCTION_R0")) {
@@ -1147,6 +1173,10 @@ void dumpParamFile(std::ostream& sout, int root, MPI_Comm comm) {
              << dsolve::SOLVER_USE_WAVELET_TOL_FUNCTION << std::endl;
         sout << "\tdsolve::SOLVER_WAVELET_TOL_MAX: "
              << dsolve::SOLVER_WAVELET_TOL_MAX << std::endl;
+        sout << "\tdsolve::SOLVER_DERIV_FIRST_WEIGHT: "
+             << dsolve::SOLVER_DERIV_FIRST_WEIGHT << std::endl;
+        sout << "\tdsolve::SOLVER_DERIV_SECOND_WEIGHT: "
+             << dsolve::SOLVER_DERIV_SECOND_WEIGHT << std::endl;
         sout << "\tdsolve::SOLVER_WAVELET_TOL_FUNCTION_R0: "
              << dsolve::SOLVER_WAVELET_TOL_FUNCTION_R0 << std::endl;
         sout << "\tdsolve::SOLVER_WAVELET_TOL_FUNCTION_R1: "

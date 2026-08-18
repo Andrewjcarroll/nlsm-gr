@@ -157,6 +157,12 @@ SOLVER_INMATFILT_SECOND_COEFFS = [0.5]
 "dsolve::SOLVER_DENDRO_GRAIN_SZ"   = 100                       # NLSM_DENDRO_GRAIN_SZ
 "dsolve::SOLVER_ASYNC_COMM_K"      = 2                         # NLSM_ASYNC_COMM_K
 "dsolve::SOLVER_DENDRO_AMR_FAC"    = 0.1                       # NLSM_DENDRO_AMR_FAC
+
+# Weight applied to the first-derivative WAMR indicator (0 disables it)
+"dsolve::SOLVER_DERIV_FIRST_WEIGHT" = 0.0
+
+# Weight applied to the second-derivative WAMR indicator (0 disables it)
+"dsolve::SOLVER_DERIV_SECOND_WEIGHT" = 0.0
 "dsolve::SOLVER_LOAD_IMB_TOL"      = 0.1                       # NLSM_LOAD_IMB_TOL
 "dsolve::SOLVER_DIM"               = 3                         # NLSM_DIM
 
