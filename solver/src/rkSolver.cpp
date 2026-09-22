@@ -1,3 +1,4 @@
+#include "shellOutput.h"
 //
 // Created by David
 //
@@ -1657,6 +1658,9 @@ void RK_SOLVER::rkSolve() {
     const unsigned int PW = dsolve::SOLVER_PADDING_WIDTH;
     double l_min, l_max;
     for (double t = m_uiCurrentTime; t < m_uiTimeEnd; t = t + m_uiT_h) {
+        if (dsolve::shellOutputDue(m_uiCurrentStep))
+            dsolve::writeShell(m_uiMesh, m_uiPrevVar, m_uiCurrentStep,
+                               m_uiCurrentTime);
         dsolve::SOLVER_CURRENT_RK_COORD_TIME = m_uiCurrentTime;
         dsolve::SOLVER_CURRENT_RK_STEP = m_uiCurrentStep;
 

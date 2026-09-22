@@ -193,6 +193,8 @@ set(CUSTOM_SOLVER_SRC
     src/profile_params.cpp
     src/system_constraints.cpp
     src/dataUtils.cpp
+    src/shellOutput.cpp
+    src/shellModes.cpp
     src/solverCtx.cpp
     )
 
@@ -306,3 +308,10 @@ endif()
 # add_dependencies(nlsmSolver COG_GENERATION)
 
 # endif()
+
+include(${CMAKE_SOURCE_DIR}/cmake/ShellInterpolation.cmake)
+
+# Small transform test, independent of the mesh/MPI runtime.
+add_executable(shellModesTest ../tests/shell_modes.cpp src/shellModes.cpp)
+target_include_directories(shellModesTest PRIVATE include ${GSL_INCLUDE_DIRS})
+target_link_libraries(shellModesTest PRIVATE ${GSL_LIBRARIES})

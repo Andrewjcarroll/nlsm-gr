@@ -315,6 +315,20 @@ extern unsigned int SOLVER_LTS_TS_OFFSET;
 /** @brief: Whether to output only the z slice in the VTU file */
 extern bool SOLVER_VTU_Z_SLICE_ONLY;
 
+// Optional spherical surface output (independent of volume output frequency).
+extern bool SOLVER_SHELL_OUTPUT_ENABLED;
+extern double SOLVER_SHELL_RADIUS;
+extern double SOLVER_SHELL_CENTER[3];
+extern unsigned int SOLVER_SHELL_N_THETA;
+extern unsigned int SOLVER_SHELL_N_PHI;
+extern unsigned int SOLVER_SHELL_OUTPUT_FREQ;
+extern std::string SOLVER_SHELL_FILE_PREFIX;
+extern bool SOLVER_SHELL_VALIDATE;
+extern bool SOLVER_SHELL_MODES_ENABLE;
+extern unsigned int SOLVER_SHELL_LMAX;
+extern unsigned int SOLVER_SHELL_MODE_FREQ;
+
+
 /** @brief: Variable group size for the asynchronous unzip operation. This is an
  * async communication. (Upper bound should be SOLVER_NUM_VARS) */
 extern unsigned int SOLVER_ASYNC_COMM_K;

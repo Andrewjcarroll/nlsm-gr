@@ -174,6 +174,7 @@ class SOLVERCtx : public ts::Ctx<SOLVERCtx, DendroScalar, unsigned int> {
 
     /**@brief: write to vtu. */
     int write_vtu();
+    int write_shell();
 
     /**@brief: writes checkpoint*/
     int write_checkpt();

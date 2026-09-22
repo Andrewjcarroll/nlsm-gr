@@ -19,7 +19,7 @@ SOLVER_INMATFILT_SECOND_COEFFS = [0.5]
 # ========
 # === FILE SAVING AND BASIC INFORMATION PARAMETERS
 # ========
-"dsolve::SOLVER_USE_LINEAR_EQNS = true
+"dsolve::SOLVER_USE_LINEAR_EQNS" = true
 # Prefixes (mapped from NLSM_*_FILE_PREFIX)
 "dsolve::SOLVER_VTU_FILE_PREFIX"     = "vtu/nlsm_gr"     # NLSM_VTU_FILE_PREFIX
 "dsolve::SOLVER_CHKPT_FILE_PREFIX"   = "cp/nlsm_cp"     # NLSM_CHKPT_FILE_PREFIX
@@ -33,6 +33,21 @@ SOLVER_INMATFILT_SECOND_COEFFS = [0.5]
 
 # z-slice only
 "dsolve::SOLVER_VTU_Z_SLICE_ONLY" = true                       # NLSM_VTU_Z_SLICE_ONLY
+
+# Spherical-shell VTU output (independent of volume/slice output).
+# Set enabled to true to write U_CHI, U_PHI, radius, theta, and phi.
+# The entire sphere must lie strictly inside the physical domain.
+"dsolve::SOLVER_SHELL_OUTPUT_ENABLED" = true
+"dsolve::SOLVER_SHELL_MODES_ENABLE" = false                  # Independent of shell VTU
+"dsolve::SOLVER_SHELL_LMAX" = 8                              # Both angular counts >= 2*LMAX+1
+"dsolve::SOLVER_SHELL_MODE_FREQ" = 10                        # Step interval; includes step 0
+"dsolve::SOLVER_SHELL_RADIUS" = 10.0
+"dsolve::SOLVER_SHELL_CENTER" = [0.0, 0.0, 0.0]
+"dsolve::SOLVER_SHELL_N_THETA" = 65                           # Includes both poles; minimum 3
+"dsolve::SOLVER_SHELL_N_PHI" = 128                            # Periodic longitude; minimum 3
+"dsolve::SOLVER_SHELL_OUTPUT_FREQ" = 10                       # Positive step interval; includes step 0
+"dsolve::SOLVER_SHELL_FILE_PREFIX" = "vtu/nlsm_shell"
+"dsolve::SOLVER_SHELL_VALIDATE" = false                       # Optional analytic interpolation checks
 
 # IO frequencies / gaps
 "dsolve::SOLVER_IO_OUTPUT_FREQ" = 1                            # NLSM_IO_OUTPUT_FREQ

@@ -1,3 +1,4 @@
+#include "shellOutput.h"
 /**
  * @file solverCtx.cpp
  * @author Milinda Fernando (milinda@cs.utah.edu)
@@ -925,6 +926,14 @@ int SOLVERCtx::init_grid() {
 }
 
 int SOLVERCtx::finalize() { return 0; }
+
+int SOLVERCtx::write_shell() {
+    if (!shellOutputDue(m_uiTinfo._m_uiStep) || !m_uiMesh->isActive()) return 0;
+    DendroScalar* fields[SOLVER_NUM_VARS];
+    m_var[VL::CPU_EV].to_2d(fields);
+    writeShell(m_uiMesh, fields, m_uiTinfo._m_uiStep, m_uiTinfo._m_uiT);
+    return 0;
+}
 
 int SOLVERCtx::write_vtu() {
     if (!m_uiMesh->isActive()) return 0;

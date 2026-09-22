@@ -20,6 +20,7 @@
 #include "octUtils.h"
 #include "parameters.h"
 #include "rkSolver.h"
+#include "shellOutput.h"
 
 int main(int argc, char** argv) {
     unsigned int ts_mode = 1;
@@ -409,6 +410,9 @@ int main(int argc, char** argv) {
 
             // NOTE: this is where the train,validate, etc. steps would go for
             // ML data
+            if (dsolve::shellOutputDue(step))
+                solverCtx->write_shell();
+
             did_print_output_time = false;
 
             if ((step % dsolve::SOLVER_TIME_STEP_OUTPUT_FREQ) == 0) {

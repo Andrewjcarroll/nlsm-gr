@@ -132,6 +132,17 @@ unsigned int SOLVER_DISSIPATION_NC = 0;
 unsigned int SOLVER_DISSIPATION_S = 0;
 unsigned int SOLVER_LTS_TS_OFFSET = 0;
 bool SOLVER_VTU_Z_SLICE_ONLY = true;
+bool SOLVER_SHELL_OUTPUT_ENABLED = false;
+double SOLVER_SHELL_RADIUS = 10.0;
+double SOLVER_SHELL_CENTER[3] = {0.0, 0.0, 0.0};
+unsigned int SOLVER_SHELL_N_THETA = 65;
+unsigned int SOLVER_SHELL_N_PHI = 128;
+unsigned int SOLVER_SHELL_OUTPUT_FREQ = 10;
+std::string SOLVER_SHELL_FILE_PREFIX = "vtu/nlsm_shell";
+bool SOLVER_SHELL_VALIDATE = false;
+bool SOLVER_SHELL_MODES_ENABLE = false;
+unsigned int SOLVER_SHELL_LMAX = 8;
+unsigned int SOLVER_SHELL_MODE_FREQ = 10;
 unsigned int SOLVER_ASYNC_COMM_K = 4;
 double SOLVER_LOAD_IMB_TOL = 0.1;
 unsigned int SOLVER_DIM = 3;
@@ -191,6 +202,60 @@ void readParamFile(const char* inFile, MPI_Comm comm) {
     MPI_Comm_size(comm, &npes);
 
     auto file = toml::parse(inFile);
+    if (file.contains("dsolve::SOLVER_SHELL_MODES_ENABLE"))
+        SOLVER_SHELL_MODES_ENABLE = file["dsolve::SOLVER_SHELL_MODES_ENABLE"].as_boolean();
+    if (file.contains("dsolve::SOLVER_SHELL_LMAX")) {
+        const auto value = file["dsolve::SOLVER_SHELL_LMAX"].as_integer();
+        if (value < 0 || value > 1073741823)
+            throw std::runtime_error("Invalid dsolve::SOLVER_SHELL_LMAX");
+        SOLVER_SHELL_LMAX = static_cast<unsigned int>(value);
+    }
+    if (file.contains("dsolve::SOLVER_SHELL_MODE_FREQ")) {
+        const auto value = file["dsolve::SOLVER_SHELL_MODE_FREQ"].as_integer();
+        if (value < 1 || value > 2147483647)
+            throw std::runtime_error("Invalid dsolve::SOLVER_SHELL_MODE_FREQ");
+        SOLVER_SHELL_MODE_FREQ = static_cast<unsigned int>(value);
+    }
+    if (file.contains("dsolve::SOLVER_SHELL_OUTPUT_ENABLED"))
+        SOLVER_SHELL_OUTPUT_ENABLED = file["dsolve::SOLVER_SHELL_OUTPUT_ENABLED"].as_boolean();
+    if (file.contains("dsolve::SOLVER_SHELL_RADIUS"))
+        SOLVER_SHELL_RADIUS = file["dsolve::SOLVER_SHELL_RADIUS"].as_floating();
+    if (file.contains("dsolve::SOLVER_SHELL_FILE_PREFIX"))
+        SOLVER_SHELL_FILE_PREFIX = file["dsolve::SOLVER_SHELL_FILE_PREFIX"].as_string();
+    if (file.contains("dsolve::SOLVER_SHELL_VALIDATE"))
+        SOLVER_SHELL_VALIDATE = file["dsolve::SOLVER_SHELL_VALIDATE"].as_boolean();
+    if (file.contains("dsolve::SOLVER_SHELL_N_THETA")) {
+        const auto value = file["dsolve::SOLVER_SHELL_N_THETA"].as_integer();
+        if (value < 3 || value > 2147483647)
+            throw std::runtime_error("Invalid dsolve::SOLVER_SHELL_N_THETA");
+        SOLVER_SHELL_N_THETA = static_cast<unsigned int>(value);
+    }
+    if (file.contains("dsolve::SOLVER_SHELL_N_PHI")) {
+        const auto value = file["dsolve::SOLVER_SHELL_N_PHI"].as_integer();
+        if (value < 3 || value > 2147483647)
+            throw std::runtime_error("Invalid dsolve::SOLVER_SHELL_N_PHI");
+        SOLVER_SHELL_N_PHI = static_cast<unsigned int>(value);
+    }
+    if (file.contains("dsolve::SOLVER_SHELL_OUTPUT_FREQ")) {
+        const auto value = file["dsolve::SOLVER_SHELL_OUTPUT_FREQ"].as_integer();
+        if (value < 1 || value > 2147483647)
+            throw std::runtime_error("Invalid dsolve::SOLVER_SHELL_OUTPUT_FREQ");
+        SOLVER_SHELL_OUTPUT_FREQ = static_cast<unsigned int>(value);
+    }
+    if (file.contains("dsolve::SOLVER_SHELL_CENTER")) {
+        const auto& center = file["dsolve::SOLVER_SHELL_CENTER"].as_array();
+        if (center.size() != 3)
+            throw std::runtime_error("SOLVER_SHELL_CENTER requires three coordinates");
+        for (unsigned int d = 0; d < 3; ++d)
+            SOLVER_SHELL_CENTER[d] = center[d].as_floating();
+    }
+
+
+    if (SOLVER_SHELL_MODES_ENABLE &&
+        (SOLVER_SHELL_LMAX > (SOLVER_SHELL_N_THETA - 1) / 2 ||
+         SOLVER_SHELL_LMAX > (SOLVER_SHELL_N_PHI - 1) / 2))
+        throw std::runtime_error(
+            "Shell modes require N_THETA >= 2*LMAX+1 and N_PHI >= 2*LMAX+1");
 
     if (file.contains("dsolve::NLSM_NOISE_AMPLITUDE")) {
         dsolve::NLSM_NOISE_AMPLITUDE =
@@ -519,7 +584,7 @@ void readParamFile(const char* inFile, MPI_Comm comm) {
 
     if (file.contains("dsolve::SOLVER_WAVELET_TOL")) {
         if (0.0 > file["dsolve::SOLVER_WAVELET_TOL"].as_floating() ||
-            1e-04 < file["dsolve::SOLVER_WAVELET_TOL"].as_floating()) {
+            1e10 < file["dsolve::SOLVER_WAVELET_TOL"].as_floating()) {
             std::cerr << R"(Invalid value for "dsolve::SOLVER_WAVELET_TOL")"
                       << std::endl;
             exit(-1);
@@ -1156,6 +1221,19 @@ void dumpParamFile(std::ostream& sout, int root, MPI_Comm comm) {
              << dsolve::SOLVER_DISSIPATION_S << std::endl;
         sout << "\tdsolve::SOLVER_LTS_TS_OFFSET: "
              << dsolve::SOLVER_LTS_TS_OFFSET << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_OUTPUT_ENABLED: " << SOLVER_SHELL_OUTPUT_ENABLED << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_RADIUS: " << SOLVER_SHELL_RADIUS << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_N_THETA: " << SOLVER_SHELL_N_THETA << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_N_PHI: " << SOLVER_SHELL_N_PHI << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_OUTPUT_FREQ: " << SOLVER_SHELL_OUTPUT_FREQ << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_FILE_PREFIX: " << SOLVER_SHELL_FILE_PREFIX << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_VALIDATE: " << SOLVER_SHELL_VALIDATE << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_MODES_ENABLE: " << SOLVER_SHELL_MODES_ENABLE << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_LMAX: " << SOLVER_SHELL_LMAX << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_MODE_FREQ: " << SOLVER_SHELL_MODE_FREQ << std::endl;
+        sout << "\tdsolve::SOLVER_SHELL_CENTER: [" << SOLVER_SHELL_CENTER[0]
+             << "," << SOLVER_SHELL_CENTER[1] << "," << SOLVER_SHELL_CENTER[2]
+             << "]" << std::endl;
         sout << "\tdsolve::SOLVER_VTU_Z_SLICE_ONLY: "
              << dsolve::SOLVER_VTU_Z_SLICE_ONLY << std::endl;
         sout << "\tdsolve::SOLVER_ASYNC_COMM_K: " << dsolve::SOLVER_ASYNC_COMM_K
