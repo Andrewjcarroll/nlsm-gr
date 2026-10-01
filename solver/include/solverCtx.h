@@ -67,6 +67,9 @@ class SOLVERCtx : public ts::Ctx<SOLVERCtx, DendroScalar, unsigned int> {
      * timestep */
     bool m_analyticalComputed = false;
 
+    /**@brief: tracks the grid summary header for this run. */
+    bool m_uiWroteGridInfoHeader = false;
+
    public:
     /**@brief: default constructor*/
     SOLVERCtx(ot::Mesh *pMesh);
@@ -175,6 +178,9 @@ class SOLVERCtx : public ts::Ctx<SOLVERCtx, DendroScalar, unsigned int> {
     /**@brief: write to vtu. */
     int write_vtu();
     int write_shell();
+
+    /**@brief: write grid summary profile data. */
+    void write_grid_summary_data();
 
     /**@brief: writes checkpoint*/
     int write_checkpt();
